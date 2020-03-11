@@ -11,7 +11,7 @@ public class Map {
 	final static int Height = 30;
 	public Cell[][] initialMap(){
 		//TODO start the map by means of a random situation
-		Cell [][]cell = new Cell[Width+2][Height+2];	//set two assistance of border of dead cell 
+		Cell [][]cell = new Cell[Width+2][Height+2];	//set two assistance of default border of dead cell 
 		for(int i = 0;i<Width+2;i++) {					//initiate the cell matrix by set status to death
 			for(int j = 0;j<Height+2;j++) {
 				cell[i][j] = new Cell(0);
