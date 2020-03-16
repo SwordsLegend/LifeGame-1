@@ -1,59 +1,56 @@
 package methods;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.*;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.Button;
-import java.awt.GridBagLayout;
+import javax.swing.*;
 
-public class showGame extends JDialog {
 
-	private final JPanel contentPanel = new JPanel();
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			showGame dialog = new showGame();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
-	 */
-	public showGame() {
-		setBounds(100, 100, 564, 474);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		GridBagLayout gbl_contentPanel = new GridBagLayout();
-		gbl_contentPanel.columnWidths = new int[]{0};
-		gbl_contentPanel.rowHeights = new int[]{0};
-		gbl_contentPanel.columnWeights = new double[]{Double.MIN_VALUE};
-		gbl_contentPanel.rowWeights = new double[]{Double.MIN_VALUE};
-		contentPanel.setLayout(gbl_contentPanel);
+public class showGame {
+	public static void main (String[] args) {
+		JFrame j = new JFrame();
+		j.setSize(400,320);
+		j.setVisible(true);
+		j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JPanel p = new JPanel();
+		//p.setBounds(0,0,800,600);
+		j.add(p);
+		j.setResizable(false);
+		Graphics g=p.getGraphics();
+		Map m = new Map();
+		m.initialMap();
+		for(int i=2;i<Map.Width+2;i++)
 		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+			for(int t=2;t<Map.Height+2;t++)
 			{
-				Button button_start = new Button("\u5F00\u59CB");
-				buttonPane.add(button_start);
-			}
-			{
-				Button button_end = new Button("\u7ED3\u675F");
-				buttonPane.add(button_end);
+				if(m.cell[i][t].getCellStatus() == 1)
+					g.fillRect((i-2)*20, (t-2)*20, 20, 20);
+				else {
+					g.drawRect((i-2)*20, (t-2)*20, 20, 20);
+				}
 			}
 		}
+		while(true) {
+			m.updateStatus();
+			try {
+				Thread.sleep(600);
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.exit(0);
+			}
+			j.repaint();
+			for(int i=2;i<Map.Width+2;i++)
+			{
+				for(int t=2;t<Map.Height+2;t++)
+				{
+					if(m.cell[i][t].getCellStatus() == 1)
+						g.fillRect((i-2)*20, (t-2)*20, 20, 20);
+					else {
+						g.drawRect((i-2)*20, (t-2)*20, 20, 20);
+					}
+				}
+			}
+			
+		}
+		
 	}
-
 }
