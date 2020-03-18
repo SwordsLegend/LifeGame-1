@@ -8,19 +8,18 @@ import java.util.Random;
  * author @ CS_WBR
  * draw a random size map for LifeGame
  * */
-public class Map extends JPanel{
-	final static int Width = 16;
-	final static int Height = 16;
-	public Cell [][]cell = new Cell[Width+4][Height+4];	//set two assistance of default border of dead cell 
-	public void initialMap(){
+public class Map extends JPanel implements Runnable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2637193077862852042L;
+	final static int Height = 40;
+	final static int Width = 50;
+	public Cell [][]cell = new Cell[Height][Width];
+	{
 		//TODO start the map by means of a random situation
-		for(int i = 0;i<Width+4;i++) {					//initiate the cell matrix by set status to death
-			for(int j = 0;j<Height+4;j++) {
-				this.cell[i][j] = new Cell(0);
-			}
-		}
-		for(int i = 2;i<Width+2;i++) {
-			for(int j = 2;j<Height+2;j++) {
+		for(int i = 0;i<Height;i++) {
+			for(int j = 0;j<Width;j++) {
 				Random r = new Random();
 				this.cell[i][j] = new Cell(r.nextInt(2));
 			}
@@ -29,27 +28,72 @@ public class Map extends JPanel{
 	
 	public void updateStatus() {
 		//TODO count the number of living cell in matrix each round
-		int x,y;
-		for(int X=2;X<Width+2;X++) {
-			for(int Y=2;Y<Height+2;Y++) {
-				int num = 0;
-				x = X-1;
-				y = Y-1;
-				for(int i=0;i<3;i++) {
-					for(int j=0;j<3;j++) {
-						if(this.cell[x+i][y+j].getCellStatus() == 1 && i!=1 && j!=1)
-							num++;
-					}
-				//update this round cell's status 
-				this.cell[X][Y].setLivingNum(num);
+		int sourroundingAliveNum = 0;
+		for(int x=0;x<Height;x++) {
+			for(int y=0;y<Width;y++) {
+				if(isvalideCell(x-1, y-1) && (cell[x-1][y-1].getCellStatus() == 1)) sourroundingAliveNum++;
+				if(isvalideCell(x-1, y) && (cell[x-1][y].getCellStatus() == 1)) sourroundingAliveNum++;
+				if(isvalideCell(x-1, y+1) && (cell[x-1][y+1].getCellStatus() == 1)) sourroundingAliveNum++;
+				if(isvalideCell(x, y-1) && (cell[x][y-1].getCellStatus() == 1)) sourroundingAliveNum++;
+				if(isvalideCell(x, y+1) && (cell[x][y+1].getCellStatus() == 1)) sourroundingAliveNum++;
+				if(isvalideCell(x+1, y-1) && (cell[x+1][y-1].getCellStatus() == 1)) sourroundingAliveNum++;
+				if(isvalideCell(x+1, y) && (cell[x+1][y].getCellStatus() == 1)) sourroundingAliveNum++;
+				if(isvalideCell(x+1, y+1) && (cell[x+1][y+1].getCellStatus() == 1)) sourroundingAliveNum++;
+				cell[x][y].setLivingNum(sourroundingAliveNum);
+				sourroundingAliveNum = 0;
+			}
+		}
+		for(int x=0;x<Height;x++) {
+			for(int y=0;y<Width;y++) {
+				cell[x][y].setNextStatus();
+			}
+		}
+	}
+	
+	public boolean isvalideCell(int x,int y) {
+		if((x>=0) && (x<Height) && (y>=0) && (y<Width))
+			return true;
+		else 
+			return false;
+	}
+	
+	public void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+		for(int i=0;i<Height;i++)
+		{
+			for(int j=0;j<Width;j++)
+			{
+				if(cell[i][j].getCellStatus() == 1)
+				{
+					g.fillRect(j*20, i*20, 20, 20);
+				}
+				else
+				{
+					g.drawRect(j*20, i*20, 20, 20);
 				}
 			}
 		}
-		for(int i=2;i<Width+2;i++) {
-			for(int j=2;j<Height+2;j++) {
-				this.cell[i][j].setNextStatus();
+	}
+
+	@Override
+	public void run() {
+		// TODO 自动生成的方法存根
+		while(true)
+		{
+			synchronized(this)
+			{
+				repaint();
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				}
+				this.updateStatus();
 			}
 		}
+		
 	}
 	
 	/*
