@@ -14,22 +14,39 @@ public class Cell {
 	private int livingNum;
 	
 	public Cell(int sta) {
+
 		this.status = sta;
 	}
 	
 	public int getCellStatus() {
+
 		return this.status;
 	}
 	
 	public void setCellStatus(int sta) {
+		if(sta!=0 && sta!=1){
+			System.out.println("illegal status");
+			return;
+		}
+		else{
+			System.out.println("legal");
+		}
 		this.status = sta;
 	}
 	
 	public int getLivingNum() {
+
 		return this.livingNum;
 	}
 	
 	public void setLivingNum(int living) {
+		if(living > 8 || living < 0){
+			System.out.println("illegal living number");
+			return;
+		}
+		else{
+			System.out.println("legal");
+		}
 		this.livingNum = living;
 	}
 	

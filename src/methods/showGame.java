@@ -7,7 +7,7 @@ import javax.swing.*;
 public class ShowGame extends JFrame {
 	private static final long serialVersionUID = -8632234651334745219L;
 	public ShowGame() {
-		Map m = new Map();
+		Map m = new Map(40,50);
 		Thread showMap = new Thread(m);
 		showMap.start();
 		getContentPane().add(m);
